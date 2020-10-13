@@ -1,0 +1,34 @@
+{
+  "data": [
+    {
+      "track": "Norman",
+      "artist": "Steven Price",
+      "file": "https://www.free-stock-music.com/music/keys-of-moon-flowing-energy.mp3",
+      "image": "/images/thumb1.jpg"
+    },
+    {
+      "track": "Comsology",
+      "artist": "Stephen Barton",
+      "file": "https://www.free-stock-music.com/music/maxkomusic-dark-ages.mp3",
+      "image": "/images/thumb2.jpg"
+    },
+    {
+      "track": "Push Through",
+      "artist": "Phil Larson",
+      "file": "https://www.free-stock-music.com/music/maxkomusic-powerful-emotional-trailer.mp3",
+      "image": "/images/thumb3.jpg"
+    },
+    {
+      "track": "Battle Cry",
+      "artist": "Imagine Dragons",
+      "file": "https://www.free-stock-music.com/music/scott-buckley-clarion.mp3",
+      "image": "/images/thumb4.jpg"
+    },
+    {
+      "track": "So Say We All",
+      "artist": "Audiomachine",
+      "file": "https://www.free-stock-music.com/music/ghostrifter-official-resurgence.mp3",
+      "image": "/images/thumb5.jpg"
+    }
+  ]
+}
