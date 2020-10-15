@@ -1,8 +1,8 @@
 import React from 'react';
-import Drop from './drop/Drop';
-import tracks from './drop/tracks.json';
+import Player from './player/Player';
+import tracks from './data/tracks.json';
 import './styles.scss';
 
 export default function App() {
-  return <Drop data={tracks.data} />;
+  return <Player data={tracks.data} />;
 }
