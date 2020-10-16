@@ -40,7 +40,7 @@ $color-dark-blue: #0080ff;
     }
   }
 
-  &__player {
+  &__container {
     display: flex;
     width: 100vw;
     height: 100vh;
@@ -126,14 +126,11 @@ $color-dark-blue: #0080ff;
     font-size: 14px;
   }
 
-  &__top {
+  &__main {
     display: flex;
     flex-direction: column;
     height: 100%;
-  }
-
-  &__main {
-    flex: 1 0 70%;
+    flex: 1 0 80%;
     background-color: $color-dark-gray;
     position: relative;
     background-image: linear-gradient(to top, $color-off-black -20px , transparent 15px);
@@ -281,7 +278,7 @@ $color-dark-blue: #0080ff;
     transition: all .5s ease;
 
     &.active {
-      flex: 1 0 30%;
+      flex: 1 0 20%;
       opacity: 1;
     }
   }

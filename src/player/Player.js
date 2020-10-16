@@ -38,6 +38,7 @@ const Player = (props) => {
     });
   }, []);
 
+  // go to the next track when the previous one ends
   useEffect(() => {
     audio.current.addEventListener('ended', () => {
       setIndex(currentIndex + 1);
@@ -145,94 +146,93 @@ const Player = (props) => {
 
   return (
     <div className="player" ref={parent}>
-      <div className="player__player">
+      <div className="player__container">
         <audio
           ref={audio}
           src={data[props.index ? props.index : 0].file}
           autoPlay={playing}
         />
         <div className="player__main">
-          <div className="player__top">
-            <div className="player__images">
-              <div className="player__info">
-                <div className="player__header">
-                  <h3 className="player__title">
-                    {data[currentIndex] && data[currentIndex].track}
-                  </h3>
-                  <h5 className="player__artist">
-                    {data[currentIndex] && data[currentIndex].artist}
-                  </h5>
-                </div>
+          <div className="player__images">
+            <div className="player__info">
+              <div className="player__header">
+                <h3 className="player__title">
+                  {data[currentIndex] && data[currentIndex].track}
+                </h3>
+                <h5 className="player__artist">
+                  {data[currentIndex] && data[currentIndex].artist}
+                </h5>
               </div>
-              <div className="player__controls --small">
-                <div className="player__buttons --left">
-                  <span
-                    className={`player__button --repeat --controls --small ${
-                      repeat ? 'active' : ''
-                    }`}
-                    onClick={() => setRepeat(!repeat)}
-                  >
-                    <i
-                      className="player__icon --repat fa fa-repeat"
-                      aria-hidden="true"
-                    ></i>
-                  </span>
-                  <span
-                    className={`player__button --shuffle --small --controls ${
-                      shuffle ? 'active' : ''
-                    }`}
-                    onClick={() => {
-                      setShuffle(!shuffle);
-                    }}
-                  >
-                    <i
-                      className="player__icon --shuffle fa fa-random"
-                      aria-hidden="true"
-                    ></i>
-                  </span>
-                </div>
+            </div>
+            <div className="player__controls --small">
+              <div className="player__buttons --left">
                 <span
-                  className="player__button --prev --controls  --small"
-                  onClick={() => prev()}
+                  className={`player__button --repeat --controls --small ${
+                    repeat ? 'active' : ''
+                  }`}
+                  onClick={() => setRepeat(!repeat)}
                 >
                   <i
-                    className="player__icon --prev fa fa-backward"
+                    className="player__icon --repat fa fa-repeat"
                     aria-hidden="true"
                   ></i>
                 </span>
-                {!playing && (
-                  <span
-                    className="player__button --play --controls --small"
-                    onClick={() => play()}
-                  >
-                    <i
-                      className="player__icon --play fa fa-play"
-                      aria-hidden="true"
-                    ></i>
-                  </span>
-                )}
-                {playing && (
-                  <span
-                    className="player__button --pause --controls  --small"
-                    onClick={() => pause()}
-                  >
-                    <i
-                      className="player__icon --pause fa fa-pause"
-                      aria-hidden="true"
-                    ></i>
-                  </span>
-                )}
                 <span
-                  className="player__button --next --controls  --small"
-                  onClick={() => next()}
+                  className={`player__button --shuffle --small --controls ${
+                    shuffle ? 'active' : ''
+                  }`}
+                  onClick={() => {
+                    setShuffle(!shuffle);
+                  }}
                 >
                   <i
-                    className="player__icon --next fa fa-forward"
+                    className="player__icon --shuffle fa fa-random"
                     aria-hidden="true"
                   ></i>
                 </span>
               </div>
-              {/*<div className='player__mode'>
+              <span
+                className="player__button --prev --controls  --small"
+                onClick={() => prev()}
+              >
+                <i
+                  className="player__icon --prev fa fa-backward"
+                  aria-hidden="true"
+                ></i>
+              </span>
+              {!playing && (
+                <span
+                  className="player__button --play --controls --small"
+                  onClick={() => play()}
+                >
+                  <i
+                    className="player__icon --play fa fa-play"
+                    aria-hidden="true"
+                  ></i>
+                </span>
+              )}
+              {playing && (
+                <span
+                  className="player__button --pause --controls  --small"
+                  onClick={() => pause()}
+                >
+                  <i
+                    className="player__icon --pause fa fa-pause"
+                    aria-hidden="true"
+                  ></i>
+                </span>
+              )}
+              <span
+                className="player__button --next --controls  --small"
+                onClick={() => next()}
+              >
+                <i
+                  className="player__icon --next fa fa-forward"
+                  aria-hidden="true"
+                ></i>
+              </span>
+            </div>
+            {/*<div className='player__mode'>
               {mode === 'large' && (
                 <span
                   className='player__mode-button --small'
@@ -262,141 +262,140 @@ const Player = (props) => {
                 </span>
               )}
                 </div>*/}
-              {data.map((item, index) => (
-                <div
-                  key={item.track}
-                  className={`player__image ${
-                    index === currentIndex ? 'active' : ''
-                  }`}
-                  style={{
-                    left: `${-(currentIndex * 100)}%`
-                  }}
-                  onClick={() => play()}
-                >
-                  <div
-                    className="player__background"
-                    style={{ backgroundImage: `url(${item.image})` }}
-                  />
-                </div>
-              ))}
-            </div>
-            <div
-              className="player__progress --container"
-              onMouseOver={(e) => updateToolTip(e)}
-              onMouseMove={(e) => updateToolTip(e)}
-              onMouseOut={() => setToolTipVisible(false)}
-            >
+            {data.map((item, index) => (
               <div
-                className={`player__tooltip ${toolTipVisible ? 'active' : ''}`}
-                style={{ left: `${toolTipPos}%` }}
-              >
-                <span className={`player__tooltip-value ${toolTipValueClass}`}>
-                  {convertTime(toolTipValue)}
-                </span>
-              </div>
-              <span className="player__time --current">
-                {convertTime(currentTime)}
-              </span>
-              <div className="player__progress --bar">
-                <span
-                  className="player__progress --background"
-                  onClick={(e) => seek(e)}
-                >
-                  <span
-                    className="player__progress --indicator"
-                    style={{ width: `${progress}%` }}
-                  ></span>
-                </span>
-              </div>
-              <span className="player__time --remaining">
-                {remainingTime
-                  ? `-${convertTime(remainingTime)}`
-                  : convertTime(duration)}
-              </span>
-            </div>
-            <div className="player__controls">
-              <div className="player__buttons --left">
-                <span
-                  className={`player__button --repeat --controls ${
-                    repeat ? 'active' : ''
-                  }`}
-                  onClick={() => setRepeat(!repeat)}
-                >
-                  <i
-                    className="player__icon --repat fa fa-repeat"
-                    aria-hidden="true"
-                  ></i>
-                </span>
-                <span
-                  className={`player__button --shuffle --controls ${
-                    shuffle ? 'active' : ''
-                  }`}
-                  onClick={() => {
-                    setShuffle(!shuffle);
-                  }}
-                >
-                  <i
-                    className="player__icon --shuffle fa fa-random"
-                    aria-hidden="true"
-                  ></i>
-                </span>
-              </div>
-              <span
-                className="player__button --prev --controls"
-                onClick={() => prev()}
-              >
-                <i
-                  className="player__icon --prev fa fa-backward"
-                  aria-hidden="true"
-                ></i>
-              </span>
-              {!playing && (
-                <span
-                  className="player__button --play --controls"
-                  onClick={() => play()}
-                >
-                  <i
-                    className="player__icon --play fa fa-play"
-                    aria-hidden="true"
-                  ></i>
-                </span>
-              )}
-              {playing && (
-                <span
-                  className="player__button --pause --controls"
-                  onClick={() => pause()}
-                >
-                  <i
-                    className="player__icon --pause fa fa-pause"
-                    aria-hidden="true"
-                  ></i>
-                </span>
-              )}
-              <span
-                className="player__button --next --controls"
-                onClick={() => next()}
-              >
-                <i
-                  className="player__icon --next fa fa-forward"
-                  aria-hidden="true"
-                ></i>
-              </span>
-              <span
-                className={`player__button --tracks --controls ${
-                  tracksVisible ? 'active' : ''
+                key={index}
+                className={`player__image ${
+                  index === currentIndex ? 'active' : ''
                 }`}
-                onClick={() => setTracksVisible(!tracksVisible)}
+                style={{
+                  left: `${-(currentIndex * 100)}%`
+                }}
+                onClick={() => play()}
+              >
+                <div
+                  className="player__background"
+                  style={{ backgroundImage: `url(${item.image})` }}
+                />
+              </div>
+            ))}
+          </div>
+          <div
+            className="player__progress --container"
+            onMouseOver={(e) => updateToolTip(e)}
+            onMouseMove={(e) => updateToolTip(e)}
+            onMouseOut={() => setToolTipVisible(false)}
+          >
+            <div
+              className={`player__tooltip ${toolTipVisible ? 'active' : ''}`}
+              style={{ left: `${toolTipPos}%` }}
+            >
+              <span className={`player__tooltip-value ${toolTipValueClass}`}>
+                {convertTime(toolTipValue)}
+              </span>
+            </div>
+            <span className="player__time --current">
+              {convertTime(currentTime)}
+            </span>
+            <div className="player__progress --bar">
+              <span
+                className="player__progress --background"
+                onClick={(e) => seek(e)}
+              >
+                <span
+                  className="player__progress --indicator"
+                  style={{ width: `${progress}%` }}
+                ></span>
+              </span>
+            </div>
+            <span className="player__time --remaining">
+              {remainingTime
+                ? `-${convertTime(remainingTime)}`
+                : convertTime(duration)}
+            </span>
+          </div>
+          <div className="player__controls">
+            <div className="player__buttons --left">
+              <span
+                className={`player__button --repeat --controls ${
+                  repeat ? 'active' : ''
+                }`}
+                onClick={() => setRepeat(!repeat)}
               >
                 <i
-                  className="player__icon --tracks fa fa-list"
+                  className="player__icon --repat fa fa-repeat"
+                  aria-hidden="true"
+                ></i>
+              </span>
+              <span
+                className={`player__button --shuffle --controls ${
+                  shuffle ? 'active' : ''
+                }`}
+                onClick={() => {
+                  setShuffle(!shuffle);
+                }}
+              >
+                <i
+                  className="player__icon --shuffle fa fa-random"
                   aria-hidden="true"
                 ></i>
               </span>
             </div>
+            <span
+              className="player__button --prev --controls"
+              onClick={() => prev()}
+            >
+              <i
+                className="player__icon --prev fa fa-backward"
+                aria-hidden="true"
+              ></i>
+            </span>
+            {!playing && (
+              <span
+                className="player__button --play --controls"
+                onClick={() => play()}
+              >
+                <i
+                  className="player__icon --play fa fa-play"
+                  aria-hidden="true"
+                ></i>
+              </span>
+            )}
+            {playing && (
+              <span
+                className="player__button --pause --controls"
+                onClick={() => pause()}
+              >
+                <i
+                  className="player__icon --pause fa fa-pause"
+                  aria-hidden="true"
+                ></i>
+              </span>
+            )}
+            <span
+              className="player__button --next --controls"
+              onClick={() => next()}
+            >
+              <i
+                className="player__icon --next fa fa-forward"
+                aria-hidden="true"
+              ></i>
+            </span>
+            <span
+              className={`player__button --tracks --controls ${
+                tracksVisible ? 'active' : ''
+              }`}
+              onClick={() => setTracksVisible(!tracksVisible)}
+            >
+              <i
+                className="player__icon --tracks fa fa-list"
+                aria-hidden="true"
+              ></i>
+            </span>
           </div>
         </div>
         <div className={`player__tracks ${tracksVisible ? 'active' : ''}`}>
-          <div className="player__scroll">
+          <div className="player__scroll" >
             {data.map((item, index) => (
               <div
                 key={index}
