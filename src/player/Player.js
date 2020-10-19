@@ -4,7 +4,7 @@ import './Player.scss';
 const Player = (props) => {
   const parent = useRef();
   const audio = useRef();
-  const [data, setData] = useState(props.data);
+  const [data] = useState(props.data);
   const [playing, setPlaying] = useState(props.playing);
   const [repeat, setRepeat] = useState(props.repeat);
   const [shuffle, setShuffle] = useState(props.shuffle);
@@ -18,6 +18,7 @@ const Player = (props) => {
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0);
   const [currentIndex, setIndex] = useState(0);
+  const [shuffleData, setShuffleData] = useState([]);
   //const [mode, setMode] = useState('large');
 
   // listen for when track is loaded or playing
@@ -47,10 +48,16 @@ const Player = (props) => {
 
   // set source for current track
   useEffect(() => {
-    if (data && data[currentIndex]) {
-      audio.current.src = data[currentIndex].file;
+    if(shuffle) {
+      if(shuffleData && shuffleData[currentIndex]) {
+        audio.current.src = shuffleData[currentIndex].file;
+      }
+    } else {
+      if (data && data[currentIndex]) {
+        audio.current.src = data[currentIndex].file;
+      }
     }
-  }, [currentIndex, data]);
+  }, [currentIndex, data, shuffle, shuffleData]);
 
   // play or pause current track
   useEffect(() => {
@@ -78,9 +85,7 @@ const Player = (props) => {
   useEffect(() => {
     const copy = JSON.parse(JSON.stringify(props.data));
     if (shuffle) {
-      setData(shuffleData(copy));
-    } else {
-      setData(copy);
+      setShuffleData(shuffleArray(copy));
     }
   }, [shuffle, props.data]);
 
@@ -157,10 +162,10 @@ const Player = (props) => {
             <div className="player__info">
               <div className="player__header">
                 <h3 className="player__title">
-                  {data[currentIndex] && data[currentIndex].track}
+                  {shuffle ? shuffleData[currentIndex] && shuffleData[currentIndex].track : data[currentIndex] && data[currentIndex].track}
                 </h3>
                 <h5 className="player__artist">
-                  {data[currentIndex] && data[currentIndex].artist}
+                  {shuffle ? shuffleData[currentIndex] && shuffleData[currentIndex].artist : data[currentIndex] && data[currentIndex].artist}
                 </h5>
               </div>
             </div>
@@ -266,10 +271,10 @@ const Player = (props) => {
               <div
                 key={index}
                 className={`player__image ${
-                  index === currentIndex ? 'active' : ''
+                  getActiveTrack() ? 'active' : ''
                 }`}
                 style={{
-                  left: `${-(currentIndex * 100)}%`
+                  left: `${-(getActiveIndex() * 100)}%`
                 }}
                 onClick={() => play()}
               >
@@ -400,7 +405,7 @@ const Player = (props) => {
               <div
                 key={index}
                 className={`player__track ${
-                  index === currentIndex ? 'active' : ''
+                  getActiveTrack(index, item) ? 'active' : ''
                 }`}
                 onClick={() => {
                   set(index);
@@ -429,7 +434,27 @@ const Player = (props) => {
       </div>
     </div>
   );
-};
+
+  function getActiveTrack(index) {
+    if(shuffle && shuffleData[currentIndex]) {
+      const currentTrack = shuffleData[currentIndex].track;
+      return data.findIndex(x => x.track === currentTrack) === index;
+    } else {
+      if(data && data[currentIndex]) {
+        return currentIndex === index;
+      }
+    }
+  }
+
+  function getActiveIndex() {
+    if(shuffle && shuffleData[currentIndex]) {
+      const currentTrack = shuffleData[currentIndex].track;
+      return data.findIndex(x => x.track === currentTrack);
+    } else {
+      return currentIndex;
+    }
+  }
+}
 
 function convertTime(inputSeconds) {
   var seconds = Math.floor(inputSeconds % 60);
@@ -444,7 +469,7 @@ function convertTime(inputSeconds) {
   return minutes + ':' + seconds;
 }
 
-function shuffleData(oldArray) {
+function shuffleArray(oldArray) {
   var j, x, i;
   var newArray = oldArray;
   for (i = newArray.length - 1; i > 0; i--) {

@@ -6,7 +6,7 @@ import './styles.scss';
 export default function App() {
   return <Player data={tracks.data} 
     playing={true}
-    shuffle={false}
+    shuffle={true}
     repeat={true}
     tracksVisible={true}
   />;
